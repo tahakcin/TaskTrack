@@ -1,0 +1,28 @@
+
+body {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+
+body.loaded {
+    opacity: 1;
+}
+
+.task-card {
+    font-family: 'Poppins', sans-serif;
+    transform: scale(0.8);
+    opacity: 0;
+    transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+}
+.task-card-show {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.blur-all {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+
+

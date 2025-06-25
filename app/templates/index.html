@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block scriptTag %}
+    <script src="../static/js/script.js"></script>
+{% endblock %}
+{% block content %}
+    <main class="flex-grow" id="main">
+        <form action="/" method="POST" class="container mx-auto mt-10 flex justify-center" name="task-form"
+              id="task-form">
+            <div
+                    class="w-full max-w-md p-6 bg-white border rounded-lg shadow-sm bg-gradient-to-r from-indigo-800 via-purple-700 to-blue-800">
+                <input type="text" id="task-title" name="task-title"
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       placeholder="Enter a task title*" required/>
+                <textarea id="task-description" rows="4" name="task-description"
+                          class="mt-4 mb-3 bg-gray-50 border border-gray-300 text-gray-900  text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          placeholder="Description..."></textarea>
+                <div class="dropdown mb-4">
+                    <select id="task-priority" name="task-priority"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option
+                                class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm"
+                                value="low">Low Priority
+                        </option>
+                        <option
+                                class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm"
+                                value="medium">Medium Priority
+                        </option>
+                        <option
+                                class="text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm"
+                                value="high">High Priority
+                        </option>
+                    </select>
+                </div>
+                <input type="date" id="task-deadline" name="task-deadline"
+                       class="mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-white-700 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                       required/>
+                <button
+                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        type="submit">
+                    Add Task
+                </button>
+            </div>
+        </form>
+        <div class="flex flex-wrap justify-start gap-4" id="task-list">
+        {% for task in tasks %}
+
+
+            {% if task.status == "active" %}
+            <div class="task-card flex flex-col w-full max-w-md p-6 bg-white border rounded-lg shadow-sm bg-gradient-to-r from-gray-900 via-indigo-800 to-gray-700 text-white mb-5 ml-3 mt-5 hover:scale-105 transition-transform duration-300 ease-in-out task-card-show" data-id="{{ task.id }}">
+
+                {% set priority_class = "" %}
+                {% set priority_label = "" %}
+                {% if task.priority == "high" %}
+                    {% set priority_class = "text-red-400 bg-red-500/30 border-red-500/50" %}
+                    {% set priority_label = "🔴 High Priority" %}
+                {% elif task.priority == "medium" %}
+                    {% set priority_class = "text-yellow-400 bg-yellow-500/30 border-yellow-500/50" %}
+                    {% set priority_label = "🟡 Medium Priority" %}
+                {% else %}
+                    {% set priority_class = "text-green-400 bg-green-500/30 border-green-500/50" %}
+                    {% set priority_label = "🟢 Low Priority" %}
+                {% endif %}
+
+
+
+                <div class="flex justify-between mb-2">
+                        <span
+                                class="text-sm tracking-tight border p-1 rounded-md {{ priority_class }}">
+                            {{ priority_label }}
+                        </span>
+                    <button class="flex delete-button" data-modal-target="deleteModal" data-modal-toggle="deleteModal"
+                            id="deleteButton" type="button"><i
+                            class="fas fa-trash-alt text-xl text-white transition duration-200 hover:text-red-500 hover:scale-110 cursor-pointer"></i>
+                    </button>
+                </div>
+
+
+                <h5 class="text-center mb-2 text-2xl font-bold tracking-tight break-words">{{ task.title | upper }}</h5>
+                <p class="mb-3 font-normal break-words text-white">{{ task.description }}</p>
+                <div class="flex justify-between">
+                    <div class="flex"><span
+                            class="border-2 border-indigo-700 bg-gradient-to-r from-purple-700 to-indigo-600 text-white px-4 py-2 rounded-lg shadow-md"><h5
+                            class="text-lg text-yellow-300">Deadline</h5><p
+                            class="text-purple-200">{{ task.deadline | datetimeformat }} </p></span></div>
+                    <div class="flex justify-end items-center">
+                        <button class="done-button relative inline-flex items-center justify-center text-white rounded-lg text-sm px-4 py-2 text-center me-2 mb-2 bg-gradient-to-r from-blue-500 to-blue-700 shadow-md  transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl">
+                            <i class="fas fa-check-circle" style="margin-right: 5px;"></i>Done!
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <div class="task-card flex flex-col w-full max-w-md p-6 bg-white border rounded-lg shadow-sm bg-gradient-to-r text-white mb-5 ml-3 mt-5 task-card-show from-green-700 via-emerald-600 to-teal-500 opacity-85 transition-all duration-500 hover:scale-105 ease-in-out" data-id="{{ task.id }}">
+
+                {% set priority_class = "" %}
+                {% set priority_label = "" %}
+                {% if task.priority == "high" %}
+                    {% set priority_class = "text-red-400 bg-red-500/30 border-red-500/50" %}
+                    {% set priority_label = "🔴 High Priority" %}
+                {% elif task.priority == "medium" %}
+                    {% set priority_class = "text-yellow-400 bg-yellow-500/30 border-yellow-500/50" %}
+                    {% set priority_label = "🟡 Medium Priority" %}
+                {% else %}
+                    {% set priority_class = "text-green-400 bg-green-500/30 border-green-500/50" %}
+                    {% set priority_label = "🟢 Low Priority" %}
+                {% endif %}
+
+                <div class="flex justify-between mb-2">
+                    <span
+                        class="text-sm tracking-tight border p-1 rounded-md {{ priority_class }}">{{ priority_label }}
+                    </span>
+                    <button class="delete-button flex" data-modal-target="deleteModal" data-modal-toggle="deleteModal"
+                            id="deleteButton" type="button"><i
+                            class="fas fa-trash-alt text-xl text-white transition duration-200 hover:text-red-500 hover:scale-110 cursor-pointer"></i>
+                    </button>
+                </div>
+                <h5 class="text-center mb-2 text-2xl font-bold tracking-tight break-words line-through transition-all duration-700 text-gray-400 ease-out">
+                    {{ task.title | upper }}</h5>
+                <p class="mb-3 font-normal break-words transition-all duration-500 text-gray-400 ease-in-out">
+                    {{ task.description }}
+                </p>
+                <div class="flex justify-between">
+                    <div class="flex"><span
+                            class="border-2 bg-gradient-to-r text-white px-4 py-2 rounded-lg shadow-md border-green-600 from-teal-700 via-emerald-600 to-green-500 opacity-80 transition-all duration-500 ease-in-out"><h5
+                            class="text-lg text-yellow-300">Deadline</h5><p
+                            class="text-purple-200">{{ task.deadline | datetimeformat }}</p></span></div>
+                    <div class="flex justify-end items-center">
+                        <button class="relative inline-flex items-center justify-center text-white rounded-lg text-sm px-4 py-2 text-center me-2 mb-2 bg-gradient-to-r shadow-md from-gray-500 to-gray-700 cursor-not-allowed opacity-70 transition-all duration-500 ease-in-out"
+                                disabled="">✅ Completed!
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+        </div>
+    </main>
+
+    <!-- Main modal -->
+    <div id="deleteModal" tabindex="-1" aria-hidden="true"
+         class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm transition-opacity duration-300 ease-in-out">
+        <div class="relative p-3 w-full max-w-md h-full md:h-auto bg-white rounded-lg shadow-lg transform transition-transform duration-300 scale-95 opacity-0 modal-content">
+            <!-- Modal content -->
+            <div class="relative p-4 text-center bg-gray-50 text-gray-900 border border-gray-200 shadow-xl rounded-lg sm:p-5">
+                <button type="button" id="cancel-button"
+                        class="text-gray-500 absolute top-2.5 right-2.5 bg-transparent hover:bg-gray-200 hover:text-gray-700 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+                        data-modal-toggle="deleteModal">
+                    <svg aria-hidden="true" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                              d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                              clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+                <svg class="text-red-600 w-11 h-11 mb-3.5 mx-auto" aria-hidden="true"
+                     fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd"
+                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+                          clip-rule="evenodd"></path>
+                </svg>
+                <p class="mb-4 text-gray-700">Are you sure you want to delete this task?</p>
+                <div class="flex justify-center items-center space-x-4">
+                    <button data-modal-toggle="deleteModal" type="button" id="no-cancel-button"
+                            class="py-2 px-3 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg border border-gray-200 hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-primary-300 hover:text-gray-800 focus:10">
+                        No, cancel
+                    </button>
+                    <button type="submit"
+                            class="yes-button py-2 px-3 text-sm font-medium text-center text-white bg-red-600 rounded-lg hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300">
+                        Yes, I'm sure
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
