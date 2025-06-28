@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     "duration-300", "ease-in-out");
                 setTimeout(() => {
                     card.remove();
-                    showToast("Task successfully removed ✅");
+                    showToast("Task successfully removed");
                 }, 300);
 
             }

@@ -1,1 +1,1 @@
-from .task_controller import addDb, getAllTasks, deleteTask, markTask, getTasksbyStatus
+from .task_controller import add_db, get_all_tasks, remove_task, mark_task, get_tasks_by_status

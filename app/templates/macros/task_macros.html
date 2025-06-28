@@ -1,0 +1,15 @@
+{% macro priority_badge(priority) %}
+    {% if priority == "high" %}
+        <span class="text-sm tracking-tight border p-1 rounded-md text-red-400 bg-red-500/30 border-red-500/50 ">
+                🔴 High Priority
+            </span>
+    {% elif priority == "medium" %}
+        <span class="text-sm tracking-tight border p-1 rounded-md text-yellow-400 bg-yellow-500/30 border-yellow-500/50 ">
+                🟡 Medium Priority
+            </span>
+    {% else %}
+        <span class="text-sm tracking-tight border p-1 rounded-md text-green-400 bg-green-500/30 border-green-500/50 ">
+                🟢 Low Priority
+            </span>
+    {% endif %}
+{% endmacro %}

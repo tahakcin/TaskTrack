@@ -1,14 +1,17 @@
 import sqlite3
+from datetime import date
+
+from app.models import Task
 
 
-def getDb():
+def get_db():
     return sqlite3.connect('tasks.db')
 
 
-def addDb(title, description, priority, deadline, status):
+def add_db(title, description, priority, deadline, status):
     if not status:
         status = "active"
-    conn = getDb()
+    conn = get_db()
     cursor = conn.cursor()
     command = 'INSERT INTO tasks (title, description, priority, deadline, status) VALUES (?, ?, ?, ?, ?)'
     cursor.execute(command, (title, description, priority, deadline, status))
@@ -19,28 +22,20 @@ def addDb(title, description, priority, deadline, status):
             "status": status}
 
 
-def getAllTasks():
+def get_all_tasks():
     tasks = []
-    conn = getDb()
+    conn = get_db()
     cursor = conn.cursor()
     command = 'SELECT * FROM tasks'
     cursor.execute(command)
     rows = cursor.fetchall()
-    for row in rows:
-        task = {
-            "id": row[0],
-            "title": row[1],
-            "description": row[2],
-            "priority": row[3],
-            "deadline": row[4],
-            "status": row[5]
-        }
-        tasks.append(task)
+    tasks = [Task(*row) for row in rows]
+    conn.close()
     return tasks
 
 
-def deleteTask(taskId):
-    conn = getDb()
+def remove_task(taskId):
+    conn = get_db()
     cursor = conn.cursor()
     command = 'DELETE FROM tasks WHERE id = ?'
     cursor.execute(command, (taskId,))
@@ -48,8 +43,8 @@ def deleteTask(taskId):
     conn.close()
 
 
-def markTask(taskId):
-    conn = getDb()
+def mark_task(taskId):
+    conn = get_db()
     cursor = conn.cursor()
     command = 'UPDATE tasks SET status = "completed" WHERE id = ?'
     cursor.execute(command, (taskId,))
@@ -57,9 +52,9 @@ def markTask(taskId):
     conn.close()
 
 
-def getTasksbyStatus(status):
+def get_tasks_by_status(status):
     tasks = []
-    conn = getDb()
+    conn = get_db()
     cursor = conn.cursor()
     command = 'SELECT * FROM tasks WHERE status = ?'
     cursor.execute(command, (status,))
@@ -75,3 +70,5 @@ def getTasksbyStatus(status):
         }
         tasks.append(task)
     return tasks
+
+
