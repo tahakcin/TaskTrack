@@ -18,9 +18,17 @@
 {% block content %}
     <div class="flex-grow">
         <div class="flex flex-wrap justify-start gap-4" id="task-list">
-            {% for task in tasks %}
-                {% include 'components/active_card.html' %}
-            {% endfor %}
+            {% if not tasks %}
+                <div class="flex animate-fade-in duration-500">
+                    <div class="bg-purple-900/20 border border-purple-600 text-neutral-600 italic text-md px-4 py-3 rounded text-center">
+                        No active tasks at the moment — take a breath, you've earned it 🙂
+                    </div>
+                </div>
+            {% else %}
+                {% for task in tasks %}
+                    {% include 'components/active_card.html' %}
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
 {% endblock %}
