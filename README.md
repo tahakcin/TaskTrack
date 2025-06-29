@@ -29,17 +29,18 @@ Track your active and completed tasks seamlessly with clean UI and smart filteri
 - Add tasks (title, description, priority, deadline)
 - Separate completed and active tasks
 - Delete tasks (with modal confirmation)
-- Color-coded alerts based on deadline *(planned)*
+- Visual deadline indicators using color cues and alert icons
 - Responsive interface (mobile/desktop)
 
 ## 📁 File Structure
-tasktrack/
-├── app.py
-├── 📂controllers/
-├── 📂routes/
-├── 📂models/
-├── 📂templates/
-├── 📂static/
+tasktrack/  
+├── app.py  
+├── 📂controllers/  
+├── 📂routes/  
+├── 📂models/  
+├── 📂templates/  
+├── 📂static/  
+├── 📂utils/  
 └── tasks.db
 
 ## Developer
