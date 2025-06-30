@@ -53,22 +53,13 @@ def mark_task(taskId):
 
 
 def get_tasks_by_status(status):
-    tasks = []
     conn = get_db()
     cursor = conn.cursor()
     command = 'SELECT * FROM tasks WHERE status = ?'
     cursor.execute(command, (status,))
     rows = cursor.fetchall()
-    for row in rows:
-        task = {
-            "id": row[0],
-            "title": row[1],
-            "description": row[2],
-            "priority": row[3],
-            "deadline": row[4],
-            "status": row[5]
-        }
-        tasks.append(task)
+    tasks = [Task(*row) for row in rows]
+    conn.close()
     return tasks
 
 
