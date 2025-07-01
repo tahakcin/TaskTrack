@@ -1,3 +1,5 @@
+import {showToast} from "./toastDOM.js";
+
 export async function handleDoneButtonClick(doneButton) {
     console.log("done handler tetiklendi")
     const taskCard = doneButton.closest(".task-card");
@@ -69,6 +71,9 @@ export async function handleDoneButtonClick(doneButton) {
         doneButton.textContent = "";
         doneButton.innerHTML = "✅ Completed!"
         doneButton.disabled = true;
+        setTimeout(()=>{
+            showToast("Task completed!")
+        },300)
     } else {
         console.error("Task could not be updated", result)
     }

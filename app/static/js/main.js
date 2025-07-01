@@ -3,6 +3,7 @@ import {handleDeleteButtonClick} from "./deleteHandler.js";
 import {handleDoneButtonClick} from "./doneHandler.js";
 import {getFormattedDate} from "./utils.js";
 import {bindTaskCardEvents} from "./cardBinder.js";
+import {showToast} from "./toastDOM.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     const taskTitle = document.getElementById("task-title");
@@ -151,6 +152,10 @@ document.addEventListener("DOMContentLoaded", () => {
         taskList.appendChild(taskCard);
         taskForm.reset();
         taskList.scrollTop = taskList.scrollHeight;
+
+        setTimeout(()=>{
+            showToast("Task added!")
+        },300)
 
         doneButton.addEventListener("click", () => handleDoneButtonClick(doneButton));
 
